@@ -1,12 +1,12 @@
 import './style.css';
 import construct from './list';
 const todo = construct();
-
+const projecttwo = construct();
 console.log(todo.getList())
-todo.addItemToList(todo.createItem('pee', 'in the toilet', 'now', 'high', '', 'no'));
+todo.addItemToList(todo.createItem('pee', 'in the toilet', 'now', 'high', '', false));
 console.log(todo.getList());
-todo.addItemToList(todo.createItem('read', 'my book', 'this week', 'low', '', 'no'))
-console.log(todo.getList());
+projecttwo.addItemToList(projecttwo.createItem('read', 'my book', 'this week', 'low', '', false))
+console.log(projecttwo.getList());
 
 const button = document.querySelector('#submit');
 button.addEventListener('click', function() {
@@ -25,8 +25,13 @@ button.addEventListener('click', function() {
 })
 
 const remove = document.querySelector('#remove');
-
 remove.addEventListener('click', function(){
   todo.removeItem(0);
-  console.log(todo.getList())
+  console.log(todo.getList());
+})
+
+const complete = document.querySelector('#complete');
+complete.addEventListener('click', function() {
+  todo.complete(0);
+  console.log(todo.getList()[0]);
 })

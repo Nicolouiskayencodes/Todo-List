@@ -12,5 +12,12 @@ export default function todo(){
   function removeItem(num) {
     list.splice(num, 1);
   }
-  return {getList, createItem, addItemToList, removeItem};
+  function complete(index) {
+    if(list[index].complete === false){
+      list[index].complete = true;
+    } else if (list[index].complete === true) {
+      list[index].complete = false;
+    }
+  }
+  return {getList, createItem, addItemToList, removeItem, complete};
 }
