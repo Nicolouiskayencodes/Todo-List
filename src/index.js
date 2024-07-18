@@ -1,12 +1,15 @@
 import './style.css';
 import construct from './list';
-const todo = construct();
-const projecttwo = construct();
-console.log(todo.getList())
-todo.addItemToList(todo.createItem('pee', 'in the toilet', 'now', 'high', '', false));
-console.log(todo.getList());
-projecttwo.addItemToList(projecttwo.createItem('read', 'my book', 'this week', 'low', '', false))
-console.log(projecttwo.getList());
+const projects = [];
+function createProject(projectName) {
+  let obj ={}
+  let newProject = construct();
+  obj[projectName] = newProject.getList();
+  projects.push(obj);
+  return newProject;
+}
+
+const todo = createProject('todo');
 
 const button = document.querySelector('#submit');
 button.addEventListener('click', function() {
@@ -18,6 +21,7 @@ button.addEventListener('click', function() {
   const complete = false;
   todo.addItemToList(todo.createItem(title.value, description.value, date.value, priority.value, notes.value, complete));
   console.log(todo.getList());
+  console.log(projects)
   title.value = '';
   description.value = '';
   date.value = '';
