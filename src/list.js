@@ -9,5 +9,8 @@ export default function todo(){
     list.push(item);
   }
   const getList = () => list;
-  return {getList, createItem, addItemToList};
+  function removeItem(num) {
+    list.splice(num, 1);
+  }
+  return {getList, createItem, addItemToList, removeItem};
 }
