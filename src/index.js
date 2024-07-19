@@ -38,16 +38,8 @@ button.addEventListener('click', function() {
 
 function display() {
   const content = document.querySelector('#content');
-  const projectselect = document.querySelector('#project');
-  projectselect.textContent = '';
   content.textContent = '';
   for (let project of projects) {
-    const projectselect = document.querySelector('#project');
-    const selectoption = document.createElement('option');
-    selectoption.value = Object.keys(project)[0];
-    selectoption.textContent = Object.keys(project)[0]
-    projectselect.appendChild(selectoption);
-
     const projectTable = document.createElement('table');
     projectTable.classList.add('project-table');
     const caption = document.createElement('caption');
@@ -135,11 +127,24 @@ homework.addItemToList(homework.createItem('read', 'red letter', 'friday', 'medi
 todo.addItemToList(todo.createItem('hi', 'ok', 'never', 'low', '', false));
 todo.addItemToList(todo.createItem('cook', 'food', 'tonight', 'hgih', 'im hungry', false));
 
+function selectDisplay() {
+  const projectselect = document.querySelector('#project');
+  projectselect.textContent = '';
+  for (let project of projects) {
+    const selectoption = document.createElement('option');
+    selectoption.value = Object.keys(project)[0];
+    selectoption.textContent = Object.keys(project)[0]
+    if (projects.indexOf(project) === projects.length-1) {
+      selectoption.selected = true;
+    }
+    projectselect.appendChild(selectoption);}
+}
 const newProject = document.querySelector('#create-project');
 newProject.addEventListener('click', function() {
   const name = prompt('Project name:');
   createProject(name);
   display();
+  selectDisplay();
 })
-
+selectDisplay();
 display();
