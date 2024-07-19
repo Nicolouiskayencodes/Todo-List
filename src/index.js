@@ -40,6 +40,7 @@ function display() {
   const content = document.querySelector('#content');
   content.textContent = '';
   for (let project of projects) {
+    if (project[Object.keys(project)].getList().length > 0){
     const projectTable = document.createElement('table');
     projectTable.classList.add('project-table');
     const caption = document.createElement('caption');
@@ -119,7 +120,7 @@ function display() {
     }
     projectTable.appendChild(body);
     content.appendChild(projectTable);
-  }
+  }}
 }
 const homework = createProject('homework');
 homework.addItemToList(homework.createItem('math', 'differentials', 'tomorrow', 'high', 'none', true));
