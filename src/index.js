@@ -6,7 +6,7 @@ const projects = [];
 function createProject(projectName) {
   let obj ={}
   let newProject = construct();
-  obj[projectName] = newProject.getList();
+  obj[projectName] = newProject;
   projects.push(obj);
   return newProject;
 }
@@ -15,36 +15,39 @@ const todo = createProject('todo');
 
 const button = document.querySelector('#submit');
 button.addEventListener('click', function() {
+  const project = document.querySelector('#project');
+  let listname;
+  for (let item of projects) {
+    if (Object.keys(item)[0] === project.value) {
+      listname = item[Object.keys(item)];
+    }
+  }
   const title = document.querySelector('#title');
   const description = document.querySelector('#description');
   const date = document.querySelector('#date');
   const priority = document.querySelector('#priority');
   const notes = document.querySelector('#notes');
   const complete = false;
-  todo.addItemToList(todo.createItem(title.value, description.value, date.value, priority.value, notes.value, complete));
-  console.log(todo.getList());
-  console.log(projects)
+  listname.addItemToList(listname.createItem(title.value, description.value, date.value, priority.value, notes.value, complete));
   title.value = '';
   description.value = '';
   date.value = '';
   notes.value = '';
-})
-
-const remove = document.querySelector('#remove');
-remove.addEventListener('click', function(){
-  todo.removeItem(0);
-  console.log(todo.getList());
-})
-
-const complete = document.querySelector('#complete');
-complete.addEventListener('click', function() {
-  todo.complete(0);
-  console.log(todo.getList()[0]);
+  display()
 })
 
 function display() {
   const content = document.querySelector('#content');
+  const projectselect = document.querySelector('#project');
+  projectselect.textContent = '';
+  content.textContent = '';
   for (let project of projects) {
+    const projectselect = document.querySelector('#project');
+    const selectoption = document.createElement('option');
+    selectoption.value = Object.keys(project)[0];
+    selectoption.textContent = Object.keys(project)[0]
+    projectselect.appendChild(selectoption);
+
     const projectTable = document.createElement('table');
     projectTable.classList.add('project-table');
     const caption = document.createElement('caption');
@@ -81,7 +84,7 @@ function display() {
     const body = document.createElement('tbody');
 
     let projectList = project[Object.keys(project)];
-    for (let item of projectList) {
+    for (let item of projectList.getList()) {
 
       const row = document.createElement('tr');
       const itemtitle = document.createElement('td');
@@ -99,9 +102,27 @@ function display() {
       const itemnotes = document.createElement('td');
       itemnotes.textContent = item.notes;
       row.appendChild(itemnotes);
-      const itemcomplete = document.createElement('td');
-      itemcomplete.textContent = item.complete;
-      row.appendChild(itemcomplete);
+
+      const itemcomplete = document.createElement('button');
+      if (item.complete === true) {
+        itemcomplete.textContent = '✓';
+      } else if (item.complete === false) {
+        itemcomplete.textContent = ''
+      }
+      itemcomplete.addEventListener('click', function() {
+        projectList.complete(projectList.getList().indexOf(item));
+        display();
+      })
+      const tdcomplete = document.createElement('td');
+      tdcomplete.appendChild(itemcomplete);
+      row.appendChild(tdcomplete);
+      const removeButton = document.createElement('button');
+      removeButton.textContent = 'Remove';
+      removeButton.addEventListener('click', function() {
+        projectList.removeItem(projectList.getList().indexOf(item))
+        display();
+      })
+      row.appendChild(removeButton);
       body.appendChild(row);
     }
     projectTable.appendChild(body);
@@ -113,5 +134,12 @@ homework.addItemToList(homework.createItem('math', 'differentials', 'tomorrow', 
 homework.addItemToList(homework.createItem('read', 'red letter', 'friday', 'medium', '3 chapters', false));
 todo.addItemToList(todo.createItem('hi', 'ok', 'never', 'low', '', false));
 todo.addItemToList(todo.createItem('cook', 'food', 'tonight', 'hgih', 'im hungry', false));
+
+const newProject = document.querySelector('#create-project');
+newProject.addEventListener('click', function() {
+  const name = prompt('Project name:');
+  createProject(name);
+  display();
+})
 
 display();
