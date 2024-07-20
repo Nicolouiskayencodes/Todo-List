@@ -8,6 +8,9 @@ export default function todo(){
   function addItemToList(item) {
     list.push(item);
   }
+  function notes(input){
+    list.notes = input;
+  }
   const getList = () => list;
   function removeItem(num) {
     list.splice(num, 1);
@@ -19,5 +22,5 @@ export default function todo(){
       list[index].complete = false;
     }
   }
-  return {getList, createItem, addItemToList, removeItem, complete};
+  return {getList, createItem, addItemToList, removeItem, complete, notes};
 }
