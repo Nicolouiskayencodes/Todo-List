@@ -31,6 +31,7 @@ button.addEventListener('click', function() {
   title.value = '';
   description.value = '';
   date.value = '';
+  sendStorage()
   display()
 })
 
@@ -46,7 +47,9 @@ function display() {
     caption.textContent = Object.keys(project)[0];
     projectContainer.appendChild(caption);
     const projectTable = document.createElement('div');
-    caption.addEventListener('click', function() {
+    showProject();
+    caption.addEventListener('click', function() {showProject()})
+      function showProject(){
       if (projectContainer.classList.contains('active') === true ){
         projectTable.textContent = '';
         projectContainer.classList.remove('active');
@@ -55,6 +58,7 @@ function display() {
         let projectList = project[Object.keys(project)];
     for (let item of projectList.getList()) {
       const row = document.createElement('div');
+      row.classList.add('task-container');
       const completeContainer = document.createElement('div');
       completeContainer.classList.add('complete-container');
       row.appendChild(completeContainer);
@@ -69,7 +73,8 @@ function display() {
         itemcomplete.addEventListener('click', function() {
           completeContainer.textContent = '';
           projectList.complete(projectList.getList().indexOf(item));
-          completeButton()
+          sendStorage();
+          completeButton();
         })
         completeContainer.appendChild(itemcomplete);
       }
@@ -80,32 +85,34 @@ function display() {
       itemtitle.textContent = item.title;
       row.appendChild(itemtitle);
       const itemdue = document.createElement('p');
-      itemdue.textContent = formatRelative(item.dueDate, new Date());
+      if (item.dueDate !== '') {itemdue.textContent = formatRelative(item.dueDate, new Date())};
       row.appendChild(itemdue);
 
       const toggle = document.createElement('div');
       itemtitle.addEventListener('click', function() {
         if (toggle.classList.contains('open') !== true) {
-          const itempriority = document.createElement('p');
-          itempriority.textContent = item.priority;
-          toggle.appendChild(itempriority);
           const itemdescription = document.createElement('p');
           itemdescription.textContent = item.description;
           toggle.appendChild(itemdescription);
+          const itempriority = document.createElement('p');
+          itempriority.textContent = 'Priority: ' + item.priority;
+          toggle.appendChild(itempriority);
           const itemnotes = document.createElement('textarea');
           itemnotes.classList.add('notes');
-          itemnotes.setAttribute('placeholder', '...');
+          itemnotes.setAttribute('placeholder', 'Add notes...');
           itemnotes.addEventListener('change', function() {
             projectList.notes(itemnotes.value);
             item.notes = itemnotes.value;
+            sendStorage()
           })
           itemnotes.textContent = item.notes;
 
           toggle.appendChild(itemnotes);
           const removeButton = document.createElement('button');
-          removeButton.textContent = 'Remove';
+          removeButton.textContent = '✕';
           removeButton.addEventListener('click', function() {
             projectList.removeItem(projectList.getList().indexOf(item))
+            sendStorage()
             row.remove();
           })
           toggle.appendChild(removeButton);
@@ -122,7 +129,7 @@ function display() {
       projectContainer.appendChild(projectTable);
   }
       }
-    })
+    }
     content.appendChild(projectContainer);
   }}
 }
@@ -143,9 +150,37 @@ function selectDisplay() {
 const newProject = document.querySelector('#create-project');
 newProject.addEventListener('click', function() {
   const name = prompt('Project name:');
+  if (name !== null) {
   createProject(name);
+  sendStorage();
   display();
   selectDisplay();
+  }
 })
+const storageprojects = {};
+function sendStorage(){
+  for (let project of projects) {
+    const projectname = Object.keys(project)[0];
+    const projectcontent = project[Object.keys(project)].getList();
+    storageprojects[projectname] = projectcontent;
+  }
+  const projectstring = JSON.stringify(storageprojects);
+  localStorage.setItem('todo', projectstring);
+}
+
+function getStorage() {
+  const stored = JSON.parse(localStorage.getItem('todo'));
+  if (stored !== null){
+  for (let key of Object.keys(stored)){
+    const project = createProject(key);
+    const values = stored[key];
+    for (let item of values) {
+      project.addItemToList(project.createItem(item.title, item.description, item.dueDate, item.priority, item.notes, item.complete))
+    }
+  }
+}
+
+}
+getStorage();
 selectDisplay();
 display();

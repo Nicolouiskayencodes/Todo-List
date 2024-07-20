@@ -40,6 +40,99 @@ p, h1, h2, h3, h4, h5, h6 {
 .item-title {
   border-style: none;
 }
-.open ~ button {
-  background-color: black;
+.project-caption{
+  font-size: 20px;
+  font-weight: 800;
+}
+.item-title{
+  font-size: 16px;
+  font-weight: 500;
+}
+textarea {
+  border-style: none;
+  background-color: beige;
+}
+textarea:focus {
+  outline-style: none;
+  background-color:rgb(229, 229, 154);
+}
+.project-table{
+  margin: 20px;
+  background: white;
+}
+.item-title{
+  background-color: beige;
+  justify-self: left;
+}
+.item-title::after {
+  content: '   ▲';
+}
+.open-task > .item-title::after {
+  content: '   ▼';
+}
+.task-container {
+  background-color: beige;
+  padding: 20px;
+  margin: 10px;
+  display: grid;
+  grid-template-columns:auto 1fr auto;
+}
+.open {
+  grid-column: 1/4;
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: 7fr 1fr;
+}
+
+.project-caption {
+  background-color: lightcyan;
+  padding: 10px;
+  border-radius: 20px;
+}
+.active > .project-caption {
+  background-color: aqua;
+}
+
+.open > button {
+  align-self: end;
+  justify-self: end;
+  width: 1.2em;
+  height: 1.2em;
+  text-align: center;
+  line-height: 1em;
+  font-size: 1em;
+  padding: 0;
+  margin: 2px;
+  border-radius: 50%;
+  border: none;
+  color: red;
+  display: block;
+  background-color: inherit;
+  font-weight: 800;
+}
+.open > button:hover {
+  background-color: red;
+  color:black;
+}
+.open p:first-child {
+  color: gray;
+  margin-bottom: 10px;
+}
+form {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  margin: 10px;
+  gap: 5px;
+  width: 500px;
+  border: 1px solid black;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 2px 2px 2px gray;
+}
+label {
+  padding: 5px;
+}
+#create-project {
+  margin: 10px;
+  margin-bottom: 0;
 }
