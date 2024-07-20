@@ -1,3 +1,45 @@
-.hello {
-  color: red;
+/* reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+* {
+  margin: 0;
+}
+body {
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+}
+input, button, textarea, select {
+  font: inherit;
+}
+p, h1, h2, h3, h4, h5, h6 {
+  overflow-wrap: break-word;
+}
+#root, #__next {
+  isolation: isolate;
+}
+/* my content */
+.complete {
+  width: 1.2em;
+  height: 1.2em;
+  text-align: center;
+  line-height: 1em;
+  font-size: 1em;
+  padding: 0;
+  margin: 2px;
+  border-radius: 50%;
+  border: 1px solid black;
+  color: green;
+  display: block;
+}
+.project-caption,
+.item-title {
+  border-style: none;
+}
+.open ~ button {
+  background-color: black;
 }

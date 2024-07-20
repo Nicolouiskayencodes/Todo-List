@@ -1,6 +1,6 @@
 import './style.css';
 import construct from './list';
-
+import {formatRelative} from 'date-fns';
 
 const projects = [];
 function createProject(projectName) {
@@ -39,20 +39,28 @@ function display() {
   content.textContent = '';
   for (let project of projects) {
     if (project[Object.keys(project)].getList().length > 0){
-    const projectTable = document.createElement('div');
-    projectTable.classList.add('project-table');
-    const caption = document.createElement('h1');
+    const projectContainer = document.createElement('div');
+    projectContainer.classList.add('project-table');
+    const caption = document.createElement('button');
     caption.classList.add('project-caption');
     caption.textContent = Object.keys(project)[0];
-    projectTable.appendChild(caption);
-
-    let projectList = project[Object.keys(project)];
+    projectContainer.appendChild(caption);
+    const projectTable = document.createElement('div');
+    caption.addEventListener('click', function() {
+      if (projectContainer.classList.contains('active') === true ){
+        projectTable.textContent = '';
+        projectContainer.classList.remove('active');
+      } else if (projectContainer.classList.contains('active') !== true) {
+        projectContainer.classList.add('active');
+        let projectList = project[Object.keys(project)];
     for (let item of projectList.getList()) {
       const row = document.createElement('div');
       const completeContainer = document.createElement('div');
+      completeContainer.classList.add('complete-container');
       row.appendChild(completeContainer);
       function completeButton() {
       const itemcomplete = document.createElement('button');
+      itemcomplete.classList.add('complete');
         if (item.complete === true) {
           itemcomplete.textContent = '✓';
        } else if (item.complete === false) {
@@ -68,10 +76,11 @@ function display() {
       completeButton();
 
       const itemtitle = document.createElement('button');
+      itemtitle.classList.add('item-title')
       itemtitle.textContent = item.title;
       row.appendChild(itemtitle);
       const itemdue = document.createElement('p');
-      itemdue.textContent = item.dueDate;
+      itemdue.textContent = formatRelative(item.dueDate, new Date());
       row.appendChild(itemdue);
 
       const toggle = document.createElement('div');
@@ -101,22 +110,23 @@ function display() {
           })
           toggle.appendChild(removeButton);
           toggle.classList.add('open');
+          row.classList.add('open-task');
         } else if (toggle.classList.contains('open') === true) {
           toggle.textContent = '';
           toggle.classList.remove('open');
+          row.classList.remove('open-task');
         }
       })
       row.appendChild(toggle);
       projectTable.appendChild(row);
-    content.appendChild(projectTable);
+      projectContainer.appendChild(projectTable);
   }
+      }
+    })
+    content.appendChild(projectContainer);
   }}
 }
-const homework = createProject('homework');
-homework.addItemToList(homework.createItem('math', 'differentials', 'tomorrow', 'high', 'none', true));
-homework.addItemToList(homework.createItem('read', 'red letter', 'friday', 'medium', '3 chapters', false));
-todo.addItemToList(todo.createItem('hi', 'ok', 'never', 'low', '', false));
-todo.addItemToList(todo.createItem('cook', 'food', 'tonight', 'hgih', 'im hungry', false));
+
 
 function selectDisplay() {
   const projectselect = document.querySelector('#project');
