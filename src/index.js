@@ -11,8 +11,6 @@ function createProject(projectName) {
   return newProject;
 }
 
-const todo = createProject('todo');
-
 const button = document.querySelector('#submit');
 button.addEventListener('click', function() {
   const project = document.querySelector('#project');
@@ -171,14 +169,16 @@ function sendStorage(){
 function getStorage() {
   const stored = JSON.parse(localStorage.getItem('todo'));
   if (stored !== null){
-  for (let key of Object.keys(stored)){
-    const project = createProject(key);
-    const values = stored[key];
-    for (let item of values) {
-      project.addItemToList(project.createItem(item.title, item.description, item.dueDate, item.priority, item.notes, item.complete))
+    for (let key of Object.keys(stored)){
+      const project = createProject(key);
+      const values = stored[key];
+      for (let item of values) {
+        project.addItemToList(project.createItem(item.title, item.description, item.dueDate, item.priority, item.notes, item.complete))
+      }
     }
+  } else if(stored === null) {
+    const todo = createProject('todo');
   }
-}
 
 }
 getStorage();
