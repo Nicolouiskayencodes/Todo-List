@@ -36,9 +36,15 @@ button.addEventListener('click', function() {
 function display() {
   const content = document.querySelector('#content');
   content.textContent = '';
-  for (let project of projects) {
-    if (project[Object.keys(project)].getList().length > 0){
-    const projectContainer = document.createElement('div');
+  const sidebar = document.querySelector('#sidebar');
+  sidebar.textContent = '';
+  const allbutton = document.createElement('button');
+  allbutton.textContent = 'All';
+  sidebar.appendChild(allbutton);
+  allbutton.addEventListener('click', function() {
+    content.textContent = '';
+    for (let project of projects) {
+      const projectContainer = document.createElement('div');
     projectContainer.classList.add('project-table');
     const caption = document.createElement('button');
     caption.classList.add('project-caption');
@@ -54,21 +60,21 @@ function display() {
       } else if (projectContainer.classList.contains('active') !== true) {
         projectContainer.classList.add('active');
         let projectList = project[Object.keys(project)];
-    for (let item of projectList.getList()) {
-      const row = document.createElement('div');
-      row.classList.add('task-container');
-      const completeContainer = document.createElement('div');
-      completeContainer.classList.add('complete-container');
-      row.appendChild(completeContainer);
-      function completeButton() {
-      const itemcomplete = document.createElement('button');
-      itemcomplete.classList.add('complete');
-        if (item.complete === true) {
-          itemcomplete.textContent = '✓';
-       } else if (item.complete === false) {
-          itemcomplete.textContent = ''
-        }
-        itemcomplete.addEventListener('click', function() {
+        for (let item of projectList.getList()) {
+          const row = document.createElement('div');
+          row.classList.add('task-container');
+          const completeContainer = document.createElement('div');
+          completeContainer.classList.add('complete-container');
+          row.appendChild(completeContainer);
+          function completeButton() {
+          const itemcomplete = document.createElement('button');
+          itemcomplete.classList.add('complete');
+          if (item.complete === true) {
+            itemcomplete.textContent = '✓';
+          } else if (item.complete === false) {
+            itemcomplete.textContent = ''
+          }
+          itemcomplete.addEventListener('click', function() {
           completeContainer.textContent = '';
           projectList.complete(projectList.getList().indexOf(item));
           sendStorage();
@@ -129,6 +135,208 @@ function display() {
       }
     }
     content.appendChild(projectContainer);
+    }
+  })
+  const today = document.createElement('button');
+  today.textContent = 'Today';
+  sidebar.appendChild(today);
+  today.addEventListener('click', function() {
+    content.textContent = '';
+    for (let project of projects) {
+    const projectContainer = document.createElement('div');
+    projectContainer.classList.add('project-table');
+    const projectTable = document.createElement('div');
+    showProject();
+      function showProject(){
+      if (projectContainer.classList.contains('active') === true ){
+        projectTable.textContent = '';
+        projectContainer.classList.remove('active');
+      } else if (projectContainer.classList.contains('active') !== true) {
+        projectContainer.classList.add('active');
+        let projectList = project[Object.keys(project)];
+        for (let item of projectList.getList()) {
+          let now = new Date();
+          console.log(new Date(item.dueDate).getTime());
+          if ((Math.abs(now.getTime() - new Date(item.dueDate).getTime()) <= 86400000) && (Math.abs(now.getTime() - new Date(item.dueDate).getTime()) >= -86400000)){
+          const row = document.createElement('div');
+          row.classList.add('task-container');
+          const completeContainer = document.createElement('div');
+          completeContainer.classList.add('complete-container');
+          row.appendChild(completeContainer);
+          function completeButton() {
+          const itemcomplete = document.createElement('button');
+          itemcomplete.classList.add('complete');
+          if (item.complete === true) {
+            itemcomplete.textContent = '✓';
+          } else if (item.complete === false) {
+            itemcomplete.textContent = ''
+          }
+          itemcomplete.addEventListener('click', function() {
+          completeContainer.textContent = '';
+          projectList.complete(projectList.getList().indexOf(item));
+          sendStorage();
+          completeButton();
+        })
+        completeContainer.appendChild(itemcomplete);
+      }
+      completeButton();
+
+      const itemtitle = document.createElement('button');
+      itemtitle.classList.add('item-title')
+      itemtitle.textContent = item.title;
+      row.appendChild(itemtitle);
+      const itemdue = document.createElement('p');
+      if (item.dueDate !== '') {itemdue.textContent = formatRelative(item.dueDate, new Date())};
+      row.appendChild(itemdue);
+
+      const toggle = document.createElement('div');
+      itemtitle.addEventListener('click', function() {
+        if (toggle.classList.contains('open') !== true) {
+          const itemdescription = document.createElement('p');
+          itemdescription.textContent = item.description;
+          toggle.appendChild(itemdescription);
+          const itempriority = document.createElement('p');
+          itempriority.textContent = 'Priority: ' + item.priority;
+          toggle.appendChild(itempriority);
+          const itemnotes = document.createElement('textarea');
+          itemnotes.classList.add('notes');
+          itemnotes.setAttribute('placeholder', 'Add notes...');
+          itemnotes.addEventListener('change', function() {
+            projectList.notes(itemnotes.value);
+            item.notes = itemnotes.value;
+            sendStorage()
+          })
+          itemnotes.textContent = item.notes;
+
+          toggle.appendChild(itemnotes);
+          const removeButton = document.createElement('button');
+          removeButton.textContent = '✕';
+          removeButton.addEventListener('click', function() {
+            projectList.removeItem(projectList.getList().indexOf(item))
+            sendStorage()
+            row.remove();
+          })
+          toggle.appendChild(removeButton);
+          toggle.classList.add('open');
+          row.classList.add('open-task');
+        } else if (toggle.classList.contains('open') === true) {
+          toggle.textContent = '';
+          toggle.classList.remove('open');
+          row.classList.remove('open-task');
+        }
+      })
+      row.appendChild(toggle);
+      projectTable.appendChild(row);
+      projectContainer.appendChild(projectTable);
+  }
+}
+      }
+    }
+    content.appendChild(projectContainer);
+ } })
+  for (let project of projects) {
+    function displayContent() {
+      const projectContainer = document.createElement('div');
+    projectContainer.classList.add('project-table');
+    const caption = document.createElement('button');
+    caption.classList.add('project-caption');
+    caption.textContent = Object.keys(project)[0];
+    projectContainer.appendChild(caption);
+    const projectTable = document.createElement('div');
+    showProject();
+    caption.addEventListener('click', function() {showProject()})
+      function showProject(){
+      if (projectContainer.classList.contains('active') === true ){
+        projectTable.textContent = '';
+        projectContainer.classList.remove('active');
+      } else if (projectContainer.classList.contains('active') !== true) {
+        projectContainer.classList.add('active');
+        let projectList = project[Object.keys(project)];
+        for (let item of projectList.getList()) {
+          const row = document.createElement('div');
+          row.classList.add('task-container');
+          const completeContainer = document.createElement('div');
+          completeContainer.classList.add('complete-container');
+          row.appendChild(completeContainer);
+          function completeButton() {
+          const itemcomplete = document.createElement('button');
+          itemcomplete.classList.add('complete');
+          if (item.complete === true) {
+            itemcomplete.textContent = '✓';
+          } else if (item.complete === false) {
+            itemcomplete.textContent = ''
+          }
+          itemcomplete.addEventListener('click', function() {
+          completeContainer.textContent = '';
+          projectList.complete(projectList.getList().indexOf(item));
+          sendStorage();
+          completeButton();
+        })
+        completeContainer.appendChild(itemcomplete);
+      }
+      completeButton();
+
+      const itemtitle = document.createElement('button');
+      itemtitle.classList.add('item-title')
+      itemtitle.textContent = item.title;
+      row.appendChild(itemtitle);
+      const itemdue = document.createElement('p');
+      if (item.dueDate !== '') {itemdue.textContent = formatRelative(item.dueDate, new Date())};
+      row.appendChild(itemdue);
+
+      const toggle = document.createElement('div');
+      itemtitle.addEventListener('click', function() {
+        if (toggle.classList.contains('open') !== true) {
+          const itemdescription = document.createElement('p');
+          itemdescription.textContent = item.description;
+          toggle.appendChild(itemdescription);
+          const itempriority = document.createElement('p');
+          itempriority.textContent = 'Priority: ' + item.priority;
+          toggle.appendChild(itempriority);
+          const itemnotes = document.createElement('textarea');
+          itemnotes.classList.add('notes');
+          itemnotes.setAttribute('placeholder', 'Add notes...');
+          itemnotes.addEventListener('change', function() {
+            projectList.notes(itemnotes.value);
+            item.notes = itemnotes.value;
+            sendStorage()
+          })
+          itemnotes.textContent = item.notes;
+
+          toggle.appendChild(itemnotes);
+          const removeButton = document.createElement('button');
+          removeButton.textContent = '✕';
+          removeButton.addEventListener('click', function() {
+            projectList.removeItem(projectList.getList().indexOf(item))
+            sendStorage()
+            row.remove();
+          })
+          toggle.appendChild(removeButton);
+          toggle.classList.add('open');
+          row.classList.add('open-task');
+        } else if (toggle.classList.contains('open') === true) {
+          toggle.textContent = '';
+          toggle.classList.remove('open');
+          row.classList.remove('open-task');
+        }
+      })
+      row.appendChild(toggle);
+      projectTable.appendChild(row);
+      projectContainer.appendChild(projectTable);
+  }
+      }
+    }
+    content.appendChild(projectContainer);
+    }
+    const sidebarLink = document.createElement('button');
+    sidebarLink.textContent = Object.keys(project)[0];
+    sidebar.appendChild(sidebarLink);
+    sidebarLink.addEventListener('click', function() {
+      content.textContent = '';
+      displayContent();
+    })
+    if (project[Object.keys(project)].getList().length > 0){
+    displayContent();
   }}
 }
 
