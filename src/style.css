@@ -81,7 +81,7 @@ textarea:focus {
   grid-column: 1/4;
   margin-top: 10px;
   display: grid;
-  grid-template-columns: 7fr 1fr;
+  grid-template-columns: 6fr 1fr;
 }
 
 .project-caption {
@@ -135,4 +135,17 @@ label {
 #create-project {
   margin: 10px;
   margin-bottom: 0;
+}
+
+#wrap {
+  display: flex;
+}
+#sidebar {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  gap: 5px;
+}
+#content {
+  flex: 1;
 }

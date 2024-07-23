@@ -11,6 +11,23 @@ function createProject(projectName) {
   return newProject;
 }
 
+const dialog = document.querySelector('#dialog');
+const addTask = document.querySelector('#create-task');
+addTask.addEventListener('click', function() {
+  dialog.showModal();
+})
+
+const cancel = document.querySelector('#cancel');
+cancel.addEventListener('click', function() {
+  const title = document.querySelector('#title');
+  const description = document.querySelector('#description');
+  const date = document.querySelector('#date');
+  title.value = '';
+  description.value = '';
+  date.value = '';
+  dialog.close();
+})
+
 const button = document.querySelector('#submit');
 button.addEventListener('click', function() {
   const project = document.querySelector('#project');
@@ -29,6 +46,7 @@ button.addEventListener('click', function() {
   title.value = '';
   description.value = '';
   date.value = '';
+  dialog.close();
   sendStorage()
   display()
 })
@@ -156,7 +174,6 @@ function display() {
         let projectList = project[Object.keys(project)];
         for (let item of projectList.getList()) {
           let now = new Date();
-          console.log(new Date(item.dueDate).getTime());
           if ((Math.abs(now.getTime() - new Date(item.dueDate).getTime()) <= 86400000) && (Math.abs(now.getTime() - new Date(item.dueDate).getTime()) >= -86400000)){
           const row = document.createElement('div');
           row.classList.add('task-container');

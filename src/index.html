@@ -7,24 +7,30 @@
 </head>
 <body>
   <button id="create-project">Create Project</button>
-  <form action="">
-    <label for="project">Project:</label>
-    <select id="project"></select>
-    <label for="title">Task:</label>
-    <input type="text" id="title" required>
-    <label for="description">Description:</label>
-    <input type="text" id="description">
-    <label for="date">Complete by:</label>
-    <input type="datetime-local" id="date">
-    <label for="priority">Priority:</label>
-    <select id="priority">
-      <option value="low" selected>Low</option>
-      <option value="medium">Medium</option>
-      <option value="high">High</option>
-    </select>
-    <button type="button" id="submit">Create Task</button>
-  </form>
-  <div id="sidebar"></div>
-  <div id="content"></div>
+  <button id="create-task">Create Task</button>
+  <dialog id="dialog">
+    <form action="">
+      <label for="project">Project:</label>
+      <select id="project"></select>
+      <label for="title">Task:</label>
+      <input type="text" id="title" required>
+      <label for="description">Description:</label>
+      <input type="text" id="description">
+      <label for="date">Complete by:</label>
+      <input type="datetime-local" id="date">
+      <label for="priority">Priority:</label>
+      <select id="priority">
+        <option value="low" selected>Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+      </select>
+      <button type="button" id="submit">Create Task</button>
+      <button type="button" id="cancel">Cancel</button>
+    </form>
+  </dialog>
+  <div id="wrap">
+    <div id="sidebar"></div>
+    <div id="content"></div>
+  </div>
 </body>
 </html>
