@@ -6,8 +6,6 @@
   <title>ToDo List</title>
 </head>
 <body>
-  <button id="create-project">Create Project</button>
-  <button id="create-task">Create Task</button>
   <dialog id="dialog">
     <form action="">
       <label for="project">Project:</label>
@@ -29,7 +27,12 @@
     </form>
   </dialog>
   <div id="wrap">
-    <div id="sidebar"></div>
+    <div id="side-panel">
+      <button id="create-project">Create Project</button>
+      <button id="create-task">Create Task</button>
+      <div id="sidebar">
+      </div>
+    </div>
     <div id="content"></div>
   </div>
 </body>
